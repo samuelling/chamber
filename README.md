@@ -2,7 +2,7 @@
 
 The Meridian Chamber of Commerce: a directory of fifty fictional businesses, each slick on the surface and obsessed with one thing underneath. Every member can bleed into the others.
 
-Live at https://samuelling.github.io/Chamber/
+Live at https://linglab.org/chamber/
 
 ## What's here
 

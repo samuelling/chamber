@@ -247,6 +247,6 @@ img.bled{outline:2px solid var(--bleed-accent,#c33);outline-offset:-2px}
 @media (prefers-reduced-motion:reduce){body[data-depth="4"],body[data-depth="4"] main{animation:none}.zw,.toast,.btn{transition:none}html{scroll-behavior:auto}}
 @media (max-width:640px){.cookie:not(.off)~.chat-btn{bottom:170px}.net-chip{bottom:76px}}
 
-/* the Invisible Hands mark (brand: samuelling.github.io/InvisibleHands/brand) */
+/* the Invisible Hands mark (brand: linglab.org/invisiblehands/brand) */
 .net-chip.has-mark::before{display:none!important}.net-chip .ih-tag{width:15px;height:15px;margin:0 7px 0 -2px;vertical-align:-3px}
 .net-panel .ctl{display:inline-flex;align-items:center}.net-panel .ctl .ih-tag{margin-left:6px}
