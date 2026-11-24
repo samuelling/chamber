@@ -36,8 +36,9 @@ Then mark it `"live": true` in `directory.json`.
 
 - **The back door** (`engine/backdoor.js`): press `` ` `` anywhere, or find the blinking `_` in the footer, a service hatch in a room, or a connection that slides in from the corner. It is a shell into the site (`ls`, `cat`, `cd /vault`, `sudo`, `finger`, `ps`, `talk`), and `ssh <member>` walks into a sibling's terminal. The sudo password is the site's hidden word.
 - **Asks**: a few pages in, a site sometimes asks in its own voice for the camera, microphone or location. If you say no, it doesn't ask again that session. If you say yes and the browser agrees, the camera redraws your face out of the site's motif, the microphone plays you back slowed and reversed under a dark echo, and location turns into a radar of made-up, oddly specific lines. All of this runs in the tab and stops when the overlay closes: nothing is recorded, stored, sent, or shared over the network, and remote controls can't trigger an ask.
+- **On phones** there are two more asks. The motion sensors make the page come loose: it slides as you tilt, the motif pours to the low edge, holding still too long turns the lights out, upside down shows the hidden word, and three hard shakes tear a way down. A fingertip over the back camera (torch on where the browser allows) takes a real, rough pulse reading from the light through the skin, and the page then beats at that rate for half a minute. Websites can't read Apple Watch or Health data, so the camera is the only way in.
 
-Try one by hand: `?odd=tear` (any glitch name), `?odd=episode`, `?odd=rift`, `?odd=hatch`, `?odd=camera`, `?odd=mic`, `?odd=gps`, `#hole-corridor-1-1` or `#hole-terminal`.
+Try one by hand: `?odd=tear` (any glitch name), `?odd=episode`, `?odd=rift`, `?odd=hatch`, `?odd=camera`, `?odd=mic`, `?odd=gps`, `?odd=motion`, `?odd=pulse`, `#hole-corridor-1-1` or `#hole-terminal`.
 
 ## The network
 

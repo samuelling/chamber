@@ -371,3 +371,13 @@ html.odd-clip,html.odd-clip body{overflow-x:clip}
 .odd-stage-fine{position:absolute;left:0;right:0;bottom:18px;margin:0;text-align:center;color:#777;font-family:var(--mono);font-size:11px}
 .odd-stage-x{position:absolute;top:16px;right:16px;z-index:2;background:#000;color:#EDE6D3;border:1px solid #444;font-family:var(--mono);font-size:13px;padding:8px 12px;border-radius:6px;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.odd-cur{animation:none}}
+
+/* ---------- backdoor: phones ---------- */
+.odd-chip{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:9600;background:#000;color:#EDE6D3;border:1px solid #444;font-family:var(--mono);font-size:13px;padding:10px 14px;border-radius:999px}
+.odd-grain{position:absolute;left:0;top:0;background-size:contain;background-repeat:no-repeat;will-change:transform}
+.odd-upside{position:fixed;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:28vw;line-height:1;color:var(--accent,#c33);transform:rotate(180deg);opacity:0;transition:opacity .5s;mix-blend-mode:difference}
+.odd-upside.on{opacity:.9}
+.odd-pulse-cam{position:absolute;right:16px;top:64px;width:84px;height:84px;object-fit:cover;border-radius:50%;border:2px solid #333;opacity:.8}
+body.odd-thump main{animation:odd-thump var(--odd-beat,1s) ease-out infinite;transform-origin:50% 30vh}
+@keyframes odd-thump{0%{transform:scale(1)}8%{transform:scale(1.012)}16%{transform:scale(1)}24%{transform:scale(1.006)}36%,100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){body.odd-thump main{animation:none}}

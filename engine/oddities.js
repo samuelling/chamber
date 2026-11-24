@@ -541,7 +541,7 @@ function onRoute(v, depth){
 (function(){
   var m = /[?&]odd=([a-z]+)/.exec(location.search); if (!m) return;
   bootAt = 0;
-  setTimeout(function(){ if (m[1] === "episode") episode(); else if (m[1] === "rift") rift(); else if (HAND[m[1]]) HAND[m[1]](); else glitch(m[1]); }, 1200);
+  setTimeout(function(){ if (m[1] === "episode") episode(); else if (m[1] === "rift") rift(); else if (HAND[m[1]]){ lastAt = Date.now(); busyUntil = lastAt + 30000; HAND[m[1]](); } else glitch(m[1]); }, 1200);
 })();
 
 window.Oddities = {

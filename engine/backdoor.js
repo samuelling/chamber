@@ -6,7 +6,9 @@
      Say no and it lets it go. Say yes and the browser asks too; then strange things happen.
      Everything happens in this tab. Nothing from the camera, microphone or location is stored,
      sent anywhere, or shared over the network; it all stops when the overlay closes.
-   Try by hand: ?odd=camera, ?odd=mic, ?odd=gps, ?odd=hatch, or #hole-terminal. */
+   On phones it may also ask for the motion sensors (the page comes loose) or for a fingertip over the
+   back camera (a real, rough pulse reading from the light through your skin).
+   Try by hand: ?odd=camera, ?odd=mic, ?odd=gps, ?odd=motion, ?odd=pulse, ?odd=hatch, or #hole-terminal. */
 (function(){
 "use strict";
 var S = window.SITE, O = window.Oddities; if (!S || !O || !O.extend) return;
@@ -145,7 +147,9 @@ function mark(k){ asked[k] = 1; try { sessionStorage.setItem("odd-asked:" + SLUG
 var WHY = {
   camera: [CO + " would like to use your camera", "to match your face to your " + W + " profile.", "Your face is processed on this device."],
   mic: [CO + " would like to use your microphone", "so " + WHO + " can hear you.", "Your voice stays on this device."],
-  gps: [CO + " would like to know your location", "to find the nearest " + W + ".", "Your location stays on this device."]
+  gps: [CO + " would like to know your location", "to find the nearest " + W + ".", "Your location stays on this device."],
+  motion: [CO + " would like to use your phone’s motion sensors", "to keep the page level.", "Motion stays on this device."],
+  pulse: [CO + " needs to confirm you’re alive", "Hold a fingertip over the camera on the back of your phone.", "Your pulse is measured on this device."]
 };
 function dialog(kind, onYes){
   var w = WHY[kind], d = document.createElement("div"); d.className = "odd-ask";
@@ -267,6 +271,132 @@ function gps(){
   });
 }
 
+/* ---------- phones only: motion sensors ---------- */
+var touch = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches) && ("ontouchstart" in window);
+function chip(label, onStop){
+  var c = document.createElement("button"); c.className = "odd-chip"; c.textContent = label; document.body.appendChild(c);
+  c.onclick = onStop; return c;
+}
+/* the page comes loose: it slides with the phone, the motif pools at the bottom, shaking tears it, upside down it tells you the word */
+function motion(){
+  if (!window.DeviceMotionEvent && !window.DeviceOrientationEvent) return 0;
+  return dialog("motion", function(){
+    var ask = window.DeviceMotionEvent && DeviceMotionEvent.requestPermission ? DeviceMotionEvent.requestPermission() : Promise.resolve("granted");
+    var ask2 = window.DeviceOrientationEvent && DeviceOrientationEvent.requestPermission ? DeviceOrientationEvent.requestPermission() : Promise.resolve("granted");
+    Promise.all([ask, ask2]).then(function(r){ if (r[0] !== "granted") throw 0; loose(); }).catch(function(e){ if (e) try { console.error(e); } catch (x) {} if (window.Engine) Engine.toast("Hold the page still yourself, then."); });
+  });
+}
+function loose(){
+  var main = $("main"), L = O.layer(), bugs = [], uri = "", gx = 0, gy = 1, tx = 0, ty = 0, shakes = 0, lastShake = 0, still = 0, upside = false, alive = true, t0 = Date.now(), lastMove = Date.now();
+  var d = window.Engine && Engine.icon, ink = (S.motif && S.motif.ink) || "#EDE6D3";
+  var img = d ? "url(\"data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='-0.5 -0.5 1 1'><path d='" + d + "' fill='" + ink + "' stroke='#111' stroke-width='0.05'/></svg>").replace(/'/g, "%27") + "\")" : "";
+  for (var i = 0; i < 46 && img; i++){ var b = document.createElement("i"); b.className = "odd-grain"; b.style.backgroundImage = img; var s = 14 + Math.random() * 22; b.style.width = b.style.height = s + "px"; L.appendChild(b); bugs.push({ el: b, x: Math.random() * innerWidth, y: -Math.random() * innerHeight, vx: 0, vy: 0, s: s, r: Math.random() * 360 }); }
+  var word = document.createElement("div"); word.className = "odd-upside"; word.textContent = HW; L.appendChild(word);
+  main.style.transition = "transform .25s ease-out";
+  function onMotion(e){
+    var a = e.accelerationIncludingGravity || {}, x = a.x || 0, y = a.y || 0, z = a.z || 0, n = Math.sqrt(x * x + y * y + z * z) || 1;
+    /* screen coordinates: x right, y down (phones report y up) */
+    var ang = (screen.orientation && screen.orientation.angle) || window.orientation || 0, sx = x, sy = -y;
+    if (ang === 90){ sx = -y; sy = -x; } else if (ang === -90 || ang === 270){ sx = y; sy = x; } else if (ang === 180){ sx = -x; sy = y; }
+    gx = sx / 9.8; gy = sy / 9.8;
+    var lin = e.acceleration ? Math.sqrt(Math.pow(e.acceleration.x || 0, 2) + Math.pow(e.acceleration.y || 0, 2) + Math.pow(e.acceleration.z || 0, 2)) : Math.abs(n - 9.8);
+    if (lin > 2.5) lastMove = Date.now();
+    if (lin > 16 && Date.now() - lastShake > 900){ lastShake = Date.now(); shook(); }
+    upside = gy < -0.6;
+  }
+  function shook(){
+    shakes++; bugs.forEach(function(b){ b.vx += (Math.random() - 0.5) * 60; b.vy += (Math.random() - 0.5) * 60; });
+    if (navigator.vibrate) try { navigator.vibrate([30, 40, 30]); } catch (e) {}
+    if (shakes === 1) Engine.toast(WHO + ": " + pick(["Don’t.", "Stop that.", "You’re hurting it."]));
+    if (shakes === 2) O.glitch("tear");
+    if (shakes >= 3){ stop(); O.rift(); }
+  }
+  var raf = 0, last = performance.now();
+  function frame(now){
+    if (!alive) return; raf = requestAnimationFrame(frame);
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    /* the page slides a little way, as if it isn't stuck down */
+    tx += (gx * 26 - tx) * 0.1; ty += (gy * 18 - ty) * 0.1;
+    main.style.transform = "translate(" + tx.toFixed(1) + "px," + (ty - 10).toFixed(1) + "px) rotate(" + (gx * 1.6).toFixed(2) + "deg)";
+    var W2 = innerWidth, H2 = innerHeight;
+    bugs.forEach(function(b){
+      b.vx += gx * 900 * dt; b.vy += gy * 900 * dt; b.vx *= 0.985; b.vy *= 0.985; b.x += b.vx * dt; b.y += b.vy * dt;
+      if (b.x < 0){ b.x = 0; b.vx *= -0.3; } if (b.x > W2 - b.s){ b.x = W2 - b.s; b.vx *= -0.3; }
+      if (b.y > H2 - b.s){ b.y = H2 - b.s; b.vy *= -0.3; } if (b.y < -b.s * 3 && gy < 0){ b.y = -b.s * 3; b.vy *= -0.3; }
+      b.r += b.vx * dt * 2; b.el.style.transform = "translate(" + b.x.toFixed(1) + "px," + b.y.toFixed(1) + "px) rotate(" + b.r.toFixed(0) + "deg)";
+    });
+    word.classList.toggle("on", upside);
+    if (Date.now() - lastMove > 12000 && !still){ still = 1; O.glitch("dark"); }
+    if (Date.now() - lastMove < 2000) still = 0;
+  }
+  window.addEventListener("devicemotion", onMotion);
+  raf = requestAnimationFrame(frame);
+  var c = chip("Hold the page still ×", function(){ stop(); });
+  Engine.toast(pick(["The page is loose. Tilt it.", "Careful. It’s not stuck down any more.", "Tilt the phone. Something will settle."]));
+  var timer = setTimeout(stop, 60000);
+  function stop(){ if (!alive) return; alive = false; clearTimeout(timer); cancelAnimationFrame(raf); window.removeEventListener("devicemotion", onMotion); main.style.transform = ""; setTimeout(function(){ main.style.transition = ""; }, 300); bugs.forEach(function(b){ b.el.remove(); }); word.remove(); c.remove(); }
+  window.addEventListener("hashchange", stop, { once: true });
+}
+
+/* ---------- a pulse, from a fingertip on the camera ---------- */
+/* Real photoplethysmography: blood flowing through the fingertip changes how much light gets through it,
+   so the red channel of the camera rises and falls with each heartbeat. Rough, but real. */
+function pulse(){
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return 0;
+  return dialog("pulse", function(){
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: 320, height: 240, frameRate: { ideal: 30 } }, audio: false }).then(function(stream){
+      var track = stream.getVideoTracks()[0];
+      try { track.applyConstraints({ advanced: [{ torch: true }] }).catch(function(){}); } catch (e) {}
+      var st = stage("odd-pulse"), v = document.createElement("video"); v.muted = true; v.playsInline = true; v.srcObject = stream; v.play();
+      v.className = "odd-pulse-cam"; st.appendChild(v);
+      var cv = document.createElement("canvas"); st.insertBefore(cv, st.firstChild);
+      var g = cv.getContext("2d"), sm = document.createElement("canvas"), sg = sm.getContext("2d", { willReadFrequently: true }); sm.width = 40; sm.height = 30;
+      var xs = [], ts = [], bpm = 0, quality = 0, raf = 0, t0 = performance.now(), acc = getComputedStyle(document.body).getPropertyValue("--accent").trim() || "#c33", said = {};
+      var line = $(".odd-stage-line", st); line.textContent = "Cover the back camera with a fingertip. Hold still.";
+      function fit(){ cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; } fit(); addEventListener("resize", fit);
+      function estimate(){
+        var n = xs.length; if (n < 90) return;
+        var span = (ts[n - 1] - ts[0]) / 1000, fs = n / span, a = [], m, k, i;
+        /* detrend: subtract a 1 s moving mean */
+        var win = Math.max(3, Math.round(fs)); for (i = 0; i < n; i++){ var s0 = 0, c0 = 0; for (k = Math.max(0, i - win); k < Math.min(n, i + win); k++){ s0 += xs[k]; c0++; } a.push(xs[i] - s0 / c0); }
+        m = 0; for (i = 0; i < n; i++) m += a[i] * a[i]; if (!m) return;
+        var best = 0, bestLag = 0, lo = Math.round(fs * 60 / 180), hi = Math.round(fs * 60 / 45);
+        for (var lag = lo; lag <= hi && lag < n - 10; lag++){ var r = 0; for (i = 0; i + lag < n; i++) r += a[i] * a[i + lag]; r /= m; if (r > best){ best = r; bestLag = lag; } }
+        quality = best; if (best > 0.35 && bestLag) bpm = Math.round(60 * fs / bestLag);
+      }
+      function frame(now){
+        raf = requestAnimationFrame(frame); if (v.readyState < 2) return;
+        sg.drawImage(v, 0, 0, 40, 30); var px = sg.getImageData(10, 8, 20, 14).data, r = 0, gsum = 0;
+        for (var i = 0; i < px.length; i += 4){ r += px[i]; gsum += px[i + 1]; }
+        var cnt = px.length / 4, red = r / cnt, covered = red > 90 && red > (gsum / cnt) * 1.6;
+        if (covered){ xs.push(red); ts.push(now); if (xs.length > 300){ xs.shift(); ts.shift(); } } else { xs = []; ts = []; bpm = 0; }
+        if (xs.length % 15 === 0) estimate();
+        /* draw: the trace, and the room flushing in time */
+        var W2 = cv.width, H2 = cv.height, beat = bpm ? Math.pow(0.5 + 0.5 * Math.cos((now / 1000) * bpm / 60 * Math.PI * 2), 6) : 0;
+        g.fillStyle = "#000"; g.fillRect(0, 0, W2, H2);
+        if (beat){ g.fillStyle = acc; g.globalAlpha = beat * 0.35; g.fillRect(0, 0, W2, H2); g.globalAlpha = 1; }
+        if (xs.length > 10){ var mn = Infinity, mx = -Infinity, j; for (j = 0; j < xs.length; j++){ mn = Math.min(mn, xs[j]); mx = Math.max(mx, xs[j]); } g.beginPath(); for (j = 0; j < xs.length; j++){ var x = j / 300 * W2, y = H2 * 0.45 - ((xs[j] - mn) / ((mx - mn) || 1) - 0.5) * H2 * 0.25; j ? g.lineTo(x, y) : g.moveTo(x, y); } g.strokeStyle = "#EDE6D3"; g.lineWidth = 2 * devicePixelRatio; g.stroke(); }
+        if (bpm){ g.fillStyle = "#EDE6D3"; g.font = (90 * devicePixelRatio) + "px ui-monospace,monospace"; g.textAlign = "center"; g.fillText(bpm, W2 / 2, H2 * 0.3); }
+        var t = (now - t0) / 1000;
+        if (!covered && t > 3 && !said.c){ line.textContent = "We can’t see your finger. Cover the camera on the back."; }
+        if (covered && !bpm && t > 6 && !said.w){ said.w = 1; line.textContent = "Press a little harder. Keep still."; }
+        if (bpm && !said.b){ said.b = 1; var l = bpm > 100 ? [bpm + ". You’re frightened. Good.", "Faster than " + WHO + " likes."] : bpm < 58 ? [bpm + ". Very calm.", "Too calm. Are you sure you’re here?"] : [bpm + ".", "The same as " + WHO + ". That’s not possible."]; typeLines(line, l.concat(["We’ll keep this for your " + W + ".", "(We won’t. It never leaves this tab.)"]), 3000); }
+        if (covered && !bpm && t > 18 && !said.n){ said.n = 1; line.textContent = "No pulse found. " + WHO + " didn’t have one either."; }
+      }
+      raf = requestAnimationFrame(frame);
+      var stop = function(){ cancelAnimationFrame(raf); removeEventListener("resize", fit); try { track.applyConstraints({ advanced: [{ torch: false }] }).catch(function(){}); } catch (e) {} stream.getTracks().forEach(function(k){ k.stop(); }); v.srcObject = null; st.remove(); if (bpm) thump(bpm); xs = ts = null; };
+      $(".odd-stage-x", st).onclick = stop; setTimeout(stop, 40000); O.onStop(stop);
+    }).catch(function(){ if (window.Engine) Engine.toast("No camera. We’ll assume you’re alive."); });
+  });
+}
+/* after a reading, the page keeps your heartbeat for a while */
+function thump(bpm){
+  if (reduced) return;
+  document.documentElement.style.setProperty("--odd-beat", (60 / bpm).toFixed(3) + "s"); document.body.classList.add("odd-thump");
+  var end = function(){ document.body.classList.remove("odd-thump"); };
+  setTimeout(end, 30000); window.addEventListener("hashchange", end, { once: true });
+}
+
 /* =====================================================================
    WIRING
    ===================================================================== */
@@ -274,9 +404,11 @@ O.extend({
   holes: { terminal: termRender },
   entries: { terminal: "terminal" },
   glitches: { hatch: hatch },
-  asks: { camera: function(){ return asked.camera ? 0 : camera(); }, mic: function(){ return asked.mic ? 0 : mic(); }, gps: function(){ return asked.gps ? 0 : gps(); } },
+  asks: (function(){ var a = { camera: function(){ return asked.camera ? 0 : camera(); }, mic: function(){ return asked.mic ? 0 : mic(); }, gps: function(){ return asked.gps ? 0 : gps(); } };
+    if (touch){ a.motion = function(){ return asked.motion ? 0 : motion(); }; a.motion2 = a.motion; a.pulse = function(){ return asked.pulse ? 0 : pulse(); }; }
+    return a; })(),
   /* by hand these ask even if you said no earlier */
-  byHand: { camera: camera, mic: mic, gps: gps }
+  byHand: { camera: camera, mic: mic, gps: gps, motion: motion, pulse: pulse }
 });
 
 /* the backtick opens the back door, from anywhere that isn't a text field */
