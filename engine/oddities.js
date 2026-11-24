@@ -298,21 +298,25 @@ function rift(){
 }
 
 /* when to go wrong */
-function chance(){ return (curView.indexOf("hole") === 0 ? 0.22 : 0) + 0.035 + curDepth * 0.07 + weird * 0.6; }
+/* Rare, and only for the reader who has gone a few pages deep: nothing at all on the surface
+   (depth 0 or 1) or in the first few pages of a visit. The network's weird control overrides this. */
+function deepEnough(){ return weird > 0.05 || (routes >= 4 && curDepth >= 2); }
+function chance(){ var d = Math.max(0, curDepth - 2); return (curView.indexOf("hole") === 0 ? 0.05 : 0) + 0.02 + d * 0.03 + weird * 0.6; }
 function maybe(onArrive){
   var now = Date.now();
   if (curView.indexOf("hole") === 0 && lastKind === "terminal") return;
-  if (now < busyUntil || now - lastAt < 9000 || now - bootAt < 6000) return;
-  var c = chance() * (onArrive ? 1 : 0.6);
-  if (Math.random() < (0.012 + curDepth * 0.02 + weird * 0.25) * (onArrive ? 1 : 0.5)) return episode();
-  /* now and then, once the reader is a few pages in, the site asks for something */
+  if (now < busyUntil || now - lastAt < 30000 || now - bootAt < 6000) return;
+  if (!deepEnough()) return;
+  var d = Math.max(0, curDepth - 2), c = chance() * (onArrive ? 1 : 0.3);
+  if (Math.random() < (0.004 + d * 0.006 + weird * 0.25) * (onArrive ? 1 : 0.3)) return episode();
+  /* now and then the site asks for something */
   var asks = Object.keys(ASKS);
-  if (onArrive && asks.length && routes > 3 && curDepth >= 1 && Math.random() < 0.025 + curDepth * 0.012 + weird * 0.08){
+  if (onArrive && asks.length && routes > 5 && Math.random() < 0.01 + d * 0.008 + weird * 0.08){
     var k = pick(asks); return later(function(){ var ms = ASKS[k](); if (ms){ lastAt = Date.now(); busyUntil = lastAt + ms; } }, 2500 + Math.random() * 3000);
   }
   if (Math.random() < c) later(function(){ glitch(); }, onArrive ? 1200 + Math.random() * 4000 : 0);
 }
-setInterval(function(){ if (!document.hidden) maybe(false); }, 14000);
+setInterval(function(){ if (!document.hidden) maybe(false); }, 20000);
 
 /* =====================================================================
    RABBIT HOLES  (#hole-<kind>-…)

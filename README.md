@@ -27,12 +27,12 @@ Then mark it `"live": true` in `directory.json`.
 
 ## When it goes wrong
 
-`engine/oddities.js` makes every member go wrong in its own voice, built only from its own material: its word, its hidden word, its trapped character's lines, its rooms, counter and photographs. Deeper pages go wrong more often.
+`engine/oddities.js` makes every member go wrong in its own voice, built only from its own material: its word, its hidden word, its trapped character's lines, its rooms, counter and photographs. It is rare, and only for readers a few pages deep: nothing happens on the surface (depth 0 or 1) or in a visit's first few pages, and even at the bottom a page goes wrong only about one time in twelve. The network's `weird` control lifts both limits.
 
 - **Glitches** (a few seconds, then the page puts itself back): possess, tear, mirror, melt, swarm, stare, breathe, dark, redact, stutter, count, menu, trail, confess.
 - **Episodes**: three to five glitches in a row, then the page splits and a link through the split leads into a rabbit hole.
 - **Rabbit holes** (`#hole-…`): `corridor` (a crawl through the basement levels, with a map that is a little wrong and things to carry), `staff` (a directory, page n of ∞, whose chain of command reaches the trapped character, who reports to you), `terms` (supplementary terms; every footnote is smaller, down to schedule X), `archive` (the site in 2011, 1999, 1987, 1952, 1897 and before), `basement` (the homepage again, one floor lower and worse each time).
-- **Doors**: footer fine print (staff login, site history), the legal page, the 404 page, and now and then a room's exits.
+- **Doors** (none on the surface): footer fine print once a page is two levels down (staff login, site history), the legal page, the 404 page, and now and then a room's exits.
 
 - **The back door** (`engine/backdoor.js`): press `` ` `` anywhere, or find the blinking `_` in the footer, a service hatch in a room, or a connection that slides in from the corner. It is a shell into the site (`ls`, `cat`, `cd /vault`, `sudo`, `finger`, `ps`, `talk`), and `ssh <member>` walks into a sibling's terminal. The sudo password is the site's hidden word.
 - **Asks**: a few pages in, a site sometimes asks in its own voice for the camera, microphone or location. If you say no, it doesn't ask again that session. If you say yes and the browser agrees, the camera redraws your face out of the site's motif, the microphone plays you back slowed and reversed under a dark echo, and location turns into a radar of made-up, oddly specific lines. All of this runs in the tab and stops when the overlay closes: nothing is recorded, stored, sent, or shared over the network, and remote controls can't trigger an ask.

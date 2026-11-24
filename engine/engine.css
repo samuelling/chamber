@@ -287,7 +287,8 @@ h1.odd-confess{color:var(--voice,var(--accent));font-family:var(--mono);letter-s
 .odd-rift a{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#000;color:#EDE6D3;font-family:var(--mono);font-size:14px;padding:14px 20px;border:1px solid var(--accent,#c33);text-decoration:none;animation:odd-blink 2.4s steps(1) infinite}
 
 /* ---------- oddities: doors ---------- */
-.odd-foot{margin-left:12px;opacity:.55}.odd-foot a{color:inherit}
+.odd-foot{margin-left:12px;opacity:.55;display:none}
+body[data-depth="2"] .odd-foot,body[data-depth="3"] .odd-foot,body[data-depth="4"] .odd-foot{display:inline}.odd-foot a{color:inherit}
 p.odd-door{margin-top:28px;font-size:13px;color:var(--muted)}
 .btn.odd-door{margin-left:10px}
 .exit.odd-door{border-style:dashed;opacity:.8}
