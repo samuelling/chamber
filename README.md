@@ -19,7 +19,7 @@ MouthBreeder (Corpora Meridian, No. 01) lives in its own repo and joins the netw
 
 A member is a folder with three files:
 
-- `index.html`: the site's own tokens and a few styles, then `site.js`, `../engine/oddities.js`, `../engine/engine.js`, `../engine/invisible-hands.js` and `../engine/bridge.js`.
+- `index.html`: the site's own tokens and a few styles, then `site.js`, `../engine/oddities.js`, `../engine/backdoor.js`, `../engine/engine.js`, `../engine/invisible-hands.js` and `../engine/bridge.js`.
 - `site.js`: `window.SITE`, which holds everything else: pages, posts, rooms, the motif (`motif.polys(n, rng, weirdness)` returns polygons for level `n` of the dive), the trapped character, chat, cookie banner and forms.
 - `atoms.json`: what siblings may borrow. Generate it with `node tools/atoms.mjs <folder>`.
 
@@ -34,7 +34,10 @@ Then mark it `"live": true` in `directory.json`.
 - **Rabbit holes** (`#hole-…`): `corridor` (a crawl through the basement levels, with a map that is a little wrong and things to carry), `staff` (a directory, page n of ∞, whose chain of command reaches the trapped character, who reports to you), `terms` (supplementary terms; every footnote is smaller, down to schedule X), `archive` (the site in 2011, 1999, 1987, 1952, 1897 and before), `basement` (the homepage again, one floor lower and worse each time).
 - **Doors**: footer fine print (staff login, site history), the legal page, the 404 page, and now and then a room's exits.
 
-Try one by hand: `?odd=tear` (any glitch name), `?odd=episode`, `?odd=rift`, or `#hole-corridor-1-1`.
+- **The back door** (`engine/backdoor.js`): press `` ` `` anywhere, or find the blinking `_` in the footer, a service hatch in a room, or a connection that slides in from the corner. It is a shell into the site (`ls`, `cat`, `cd /vault`, `sudo`, `finger`, `ps`, `talk`), and `ssh <member>` walks into a sibling's terminal. The sudo password is the site's hidden word.
+- **Asks**: a few pages in, a site sometimes asks in its own voice for the camera, microphone or location. If you say no, it doesn't ask again that session. If you say yes and the browser agrees, the camera redraws your face out of the site's motif, the microphone plays you back slowed and reversed under a dark echo, and location turns into a radar of made-up, oddly specific lines. All of this runs in the tab and stops when the overlay closes: nothing is recorded, stored, sent, or shared over the network, and remote controls can't trigger an ask.
+
+Try one by hand: `?odd=tear` (any glitch name), `?odd=episode`, `?odd=rift`, `?odd=hatch`, `?odd=camera`, `?odd=mic`, `?odd=gps`, `#hole-corridor-1-1` or `#hole-terminal`.
 
 ## The network
 

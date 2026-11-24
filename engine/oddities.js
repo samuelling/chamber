@@ -301,9 +301,15 @@ function rift(){
 function chance(){ return (curView.indexOf("hole") === 0 ? 0.22 : 0) + 0.035 + curDepth * 0.07 + weird * 0.6; }
 function maybe(onArrive){
   var now = Date.now();
+  if (curView.indexOf("hole") === 0 && lastKind === "terminal") return;
   if (now < busyUntil || now - lastAt < 9000 || now - bootAt < 6000) return;
   var c = chance() * (onArrive ? 1 : 0.6);
   if (Math.random() < (0.012 + curDepth * 0.02 + weird * 0.25) * (onArrive ? 1 : 0.5)) return episode();
+  /* now and then, once the reader is a few pages in, the site asks for something */
+  var asks = Object.keys(ASKS);
+  if (onArrive && asks.length && routes > 3 && curDepth >= 1 && Math.random() < 0.025 + curDepth * 0.012 + weird * 0.08){
+    var k = pick(asks); return later(function(){ var ms = ASKS[k](); if (ms){ lastAt = Date.now(); busyUntil = lastAt + ms; } }, 2500 + Math.random() * 3000);
+  }
   if (Math.random() < c) later(function(){ glitch(); }, onArrive ? 1200 + Math.random() * 4000 : 0);
 }
 setInterval(function(){ if (!document.hidden) maybe(false); }, 14000);
@@ -311,7 +317,8 @@ setInterval(function(){ if (!document.hidden) maybe(false); }, 14000);
 /* =====================================================================
    RABBIT HOLES  (#hole-<kind>-…)
    ===================================================================== */
-function entryOf(kind){ return { corridor: "corridor-" + (1 + Math.floor(Math.random() * 9999)) + "-1", staff: "staff-1", terms: "terms-1-" + (1 + Math.floor(Math.random() * 999)), archive: "archive-0", basement: "basement-1" }[kind]; }
+var ENTRY = {}, ASKS = {}, HAND = {}, lastKind = "", routes = 0;
+function entryOf(kind){ if (ENTRY[kind]) return ENTRY[kind]; return { corridor: "corridor-" + (1 + Math.floor(Math.random() * 9999)) + "-1", staff: "staff-1", terms: "terms-1-" + (1 + Math.floor(Math.random() * 999)), archive: "archive-0", basement: "basement-1" }[kind] || kind; }
 function head(eyebrow, h1, lede){ return "<div class='page-head'><span class='eyebrow'>" + eyebrow + "</span><h1>" + h1 + "</h1>" + (lede ? "<p class='lede'>" + lede + "</p>" : "") + "</div>"; }
 
 var H = {
@@ -402,7 +409,7 @@ var H = {
     }
     var pg = Math.max(1, +a || 1), rows = [];
     for (var i = 0; i < 12; i++){ var pid = (pg - 1) * 12 + i + 1, q = person(pid); if (pg > 3 && i === 7) q = person(0); rows.push(q); }
-    box.innerHTML = head("Internal · staff directory", "Everyone at " + esc(noDot(NAME)) + ".", "Search is disabled. Everyone is listed. Page " + pg + " of &infin;.") +
+    box.innerHTML = head("Internal · staff directory", "Everyone at " + esc(/\.$/.test(NAME) ? NAME : NAME + "."), "Search is disabled. Everyone is listed. Page " + pg + " of &infin;.") +
       "<div class='container'><table class='odd-staff'><thead><tr><th></th><th>Name</th><th>Role</th><th>Since</th><th>Status</th></tr></thead><tbody>" +
       rows.map(function(q){ return "<tr><td>" + av(q) + "</td><td><a href='#hole-staff-p" + q.id + "'>" + esc(pg > 6 ? rotWords(q.name, Math.min(0.6, pg * 0.05)) : q.name) + "</a></td><td>" + esc(q.title) + "</td><td class='mono'>" + esc(q.since) + "</td><td>" + esc(q.status) + "</td></tr>"; }).join("") +
       "</tbody></table><p class='odd-pager'>" + (pg > 1 ? "<a href='#hole-staff-" + (pg - 1) + "'>&larr; Previous</a>" : "<span></span>") + "<span class='mono'>Page " + pg + " of &infin;</span><a href='#hole-staff-" + (pg + 1) + "'>Next &rarr;</a></p></div><div style='height:80px'></div>";
@@ -492,7 +499,7 @@ var H = {
 function render(id, box){
   var parts = String(id).split("-"), kind = parts.shift(), f = H[kind];
   if (!f || !box) return false;
-  stopAll();
+  stopAll(); lastKind = kind;
   var d = f(parts, box) || 2;
   st.holes[kind] = (st.holes[kind] || 0) + 1; save();
   return d;
@@ -510,7 +517,7 @@ function doors(view, el){
   }
   if (view === "room" && Math.random() < 0.3){
     var ex = $(".exits", el); if (ex && !$(".odd-door", ex)){
-      var k = pick(["corridor", "corridor", "staff", "basement", "archive"]), t = { corridor: "A door marked " + LW + " B1", staff: "The staff stairs", basement: "Down past the error page", archive: "A door with an old sign on it" }[k];
+      var k = pick(["corridor", "corridor", "staff", "basement", "archive"].concat(H.terminal ? ["terminal", "terminal"] : [])), t = { corridor: "A door marked " + LW + " B1", staff: "The staff stairs", basement: "Down past the error page", archive: "A door with an old sign on it", terminal: "A service hatch with a blinking light" }[k];
       var x = document.createElement("a"); x.className = "exit odd-door"; x.href = "#hole-" + entryOf(k); x.textContent = t; ex.appendChild(x);
     }
   }
@@ -518,14 +525,14 @@ function doors(view, el){
 (function footDoors(){
   var tries = 0, t = setInterval(function(){
     var fine = $("footer.site .fine"); if (!fine && ++tries < 40) return; clearInterval(t); if (!fine || $(".odd-foot", fine)) return;
-    var s = document.createElement("span"); s.className = "odd-foot"; s.innerHTML = "<a href='#hole-staff-1'>Staff login</a> &middot; <a href='#hole-archive-0'>Site history</a>"; fine.appendChild(s);
+    var s = document.createElement("span"); s.className = "odd-foot"; s.innerHTML = "<a href='#hole-staff-1'>Staff login</a> &middot; <a href='#hole-archive-0'>Site history</a> <a class='odd-cur' href='#hole-terminal' aria-label='Terminal'>_</a>"; fine.appendChild(s);
   }, 100);
 })();
 
 /* ---------- called by the router after every page change ---------- */
 function onRoute(v, depth){
   stopAll();
-  curView = v === "hole" ? "hole-" : v; curDepth = depth || 0;
+  curView = v === "hole" ? "hole-" : v; curDepth = depth || 0; routes++;
   doors(v, view());
   maybe(true);
 }
@@ -534,11 +541,23 @@ function onRoute(v, depth){
 (function(){
   var m = /[?&]odd=([a-z]+)/.exec(location.search); if (!m) return;
   bootAt = 0;
-  setTimeout(function(){ if (m[1] === "episode") episode(); else if (m[1] === "rift") rift(); else glitch(m[1]); }, 1200);
+  setTimeout(function(){ if (m[1] === "episode") episode(); else if (m[1] === "rift") rift(); else if (HAND[m[1]]) HAND[m[1]](); else glitch(m[1]); }, 1200);
 })();
 
 window.Oddities = {
   render: render, onRoute: onRoute, glitch: glitch, episode: episode, rift: rift, list: NAMES, holes: Object.keys(H),
-  setWeird: function(v){ weird = Math.max(0, Math.min(1, +v || 0)); }
+  setWeird: function(v){ weird = Math.max(0, Math.min(1, +v || 0)); },
+  /* for engine/backdoor.js and anything else that wants to go wrong in the same voice */
+  material: { W: W, HW: HW, WHO: WHO, WL: WL, LINES: LINES, WORDS: WORDS, ROOMS: ROOMS, CL: CL, NAME: NAME, visitorName: visitorName },
+  layer: ensureLayer, onStop: onStop, later: later, rot: function(t, p){ return rotWords(t, p); }, stats: function(){ return st; },
+  extend: function(o){
+    var k; o = o || {};
+    for (k in o.holes || {}) H[k] = o.holes[k];
+    for (k in o.entries || {}) ENTRY[k] = o.entries[k];
+    for (k in o.glitches || {}){ G[k] = o.glitches[k]; if (NAMES.indexOf(k) < 0) NAMES.push(k); }
+    for (k in o.asks || {}) ASKS[k] = o.asks[k];
+    for (k in o.byHand || {}) HAND[k] = o.byHand[k];
+    window.Oddities.holes = Object.keys(H);
+  }
 };
 })();

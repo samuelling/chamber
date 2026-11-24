@@ -344,3 +344,30 @@ p.odd-door{margin-top:28px;font-size:13px;color:var(--muted)}
 .odd-floor-end{display:flex;flex-wrap:wrap;gap:6px;padding:30px 24px;font-family:var(--mono);font-size:12px;color:var(--muted);min-height:70vh;align-content:flex-start}.odd-floor-end i{display:inline-block;width:18px;height:18px;background-size:contain}
 @media (prefers-reduced-motion:reduce){body.odd-tear main{animation:none}.odd-big-mark,.era-1999 .marq span,.era-1999 .blink,.odd-rift a{animation:none}}
 html.odd-clip,html.odd-clip body{overflow-x:clip}
+
+/* ---------- backdoor: terminal ---------- */
+.odd-cur{text-decoration:none;animation:odd-blink 1.2s steps(1) infinite;margin-left:4px}
+.odd-term{max-width:920px;margin:24px auto 0;background:#050605;color:#B8F5C0;font-family:"VT323",ui-monospace,Menlo,Consolas,monospace;font-size:15px;line-height:1.45;padding:22px 24px;border-radius:10px;border:1px solid #1d2a1f;box-shadow:0 0 0 1px #000,0 30px 80px rgba(0,0,0,.6),inset 0 0 80px rgba(80,255,140,.05);min-height:62vh;max-height:76vh;overflow:auto;cursor:text;text-shadow:0 0 3px rgba(120,255,150,.45)}
+.odd-term-out div{white-space:pre-wrap;word-break:break-word;min-height:1.45em}
+.odd-term-echo{color:#E9FBEA}
+.odd-term-voice{color:var(--voice,#E8B7A6);text-shadow:none}
+.odd-term-in{display:flex;gap:0}.odd-term-ps{white-space:pre;color:#7FE08E}
+.odd-term-in input{flex:1;background:none;border:0;outline:0;color:#E9FBEA;font:inherit;caret-color:#B8F5C0;padding:0;min-width:0}
+.odd-hatch{position:fixed;right:18px;bottom:90px;width:min(380px,88vw);background:#050605;color:#B8F5C0;font-family:ui-monospace,Menlo,monospace;font-size:12px;padding:14px 16px 12px;border-radius:8px;border:1px solid #1d2a1f;box-shadow:0 20px 60px rgba(0,0,0,.5);transform:translateY(30px);opacity:0;transition:transform .4s,opacity .4s}
+.odd-hatch.on{transform:none;opacity:1}
+.odd-hatch pre{margin:0 0 10px;white-space:pre-wrap;font:inherit;min-height:7em}
+.odd-hatch a{color:#050605;background:#B8F5C0;padding:4px 10px;text-decoration:none;border-radius:3px}
+
+/* ---------- backdoor: asks ---------- */
+.odd-ask{position:fixed;inset:0;z-index:9400;display:grid;place-items:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .3s;pointer-events:auto}
+.odd-ask.on{opacity:1}
+.odd-ask-box{background:var(--bg,#fff);color:var(--text,#111);border:1px solid var(--stroke);border-radius:14px;padding:26px 28px;max-width:min(440px,90vw);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.odd-ask-box h3{font-size:22px;margin:10px 0 8px}.odd-ask-box p{margin:0 0 10px}.odd-ask-box .small{font-size:12px}
+.odd-ask-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.odd-stage{position:fixed;inset:0;z-index:9500;background:#000;opacity:0;transition:opacity .6s}
+.odd-stage.on{opacity:1}
+.odd-stage canvas{position:absolute;inset:0;width:100%;height:100%}
+.odd-stage-line{position:absolute;left:50%;bottom:12vh;transform:translateX(-50%);margin:0;max-width:86vw;text-align:center;color:#EDE6D3;font-family:var(--mono);font-size:clamp(15px,2vw,20px);background:rgba(0,0,0,.6);padding:8px 14px}
+.odd-stage-fine{position:absolute;left:0;right:0;bottom:18px;margin:0;text-align:center;color:#777;font-family:var(--mono);font-size:11px}
+.odd-stage-x{position:absolute;top:16px;right:16px;z-index:2;background:#000;color:#EDE6D3;border:1px solid #444;font-family:var(--mono);font-size:13px;padding:8px 12px;border-radius:6px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.odd-cur{animation:none}}

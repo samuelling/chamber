@@ -48,6 +48,7 @@ ${fonts.length ? `<link rel="preconnect" href="https://fonts.googleapis.com"><li
 <script src="../engine/kit.js"></script>
 <script src="spec.js"></script>
 <script src="../engine/oddities.js"></script>
+<script src="../engine/backdoor.js"></script>
 <script src="../engine/engine.js"></script>
 <script src="../engine/invisible-hands.js"></script>
 <script src="../engine/bridge.js"></script>
