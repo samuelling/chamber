@@ -41,7 +41,7 @@ function shell(){
     var v = document.createElement("div"); v.className = "view"; v.setAttribute("data-view", p.id);
     v.innerHTML = p.html; main.appendChild(v);
   });
-  ["article", "room"].forEach(function(id){
+  ["article", "room", "hole"].forEach(function(id){
     var v = document.createElement("div"); v.className = "view"; v.setAttribute("data-view", id);
     v.innerHTML = "<div class='container' id='" + id + "'></div>"; main.appendChild(v);
   });
@@ -465,7 +465,8 @@ function route(first){
   if (S.anchors && S.anchors[h]){ view = S.anchors[h]; anchor = h; }
   else if (h.indexOf("post-") === 0) view = renderArticle(h.slice(5)) ? "article" : "notfound";
   else if (h.indexOf("room-") === 0) view = renderRoom(h.slice(5)) ? "room" : "notfound";
-  else if (h === "article" || h === "room") view = "notfound";
+  else if (h.indexOf("hole-") === 0){ var hd = window.Oddities && Oddities.render(h.slice(5), $("#hole")); view = hd ? "hole" : "notfound"; if (hd) depthOf.hole = hd; }
+  else if (h === "article" || h === "room" || h === "hole") view = "notfound";
   if (!views.some(function(v){ return v.dataset.view === view; })) view = "notfound";
   var d = view === "article" ? articleDepth : depthOf[view];
   depthNow = d;
@@ -480,6 +481,7 @@ function route(first){
   if (d >= 3 && !state.seen){ state.seen = 1; save(); }
   if (d < 3) applySeen();
   if (S.onRoute) S.onRoute(view, state);
+  if (window.Oddities) try { Oddities.onRoute(view, d); } catch (e) {}
   hideSpecks();
   if (anchor){ var t = $("[data-anchor='" + anchor + "']"); if (t) t.scrollIntoView(); }
   else if (first !== true) window.scrollTo(0, 0);
@@ -491,7 +493,6 @@ views = $$("[data-view]");
 wireForms(); renderPosts();
 Dive = makeDive();
 window.addEventListener("hashchange", function(){ route(); });
-route(true);
 try { if (S.console) S.console.forEach(function(l){ console.log("%c" + l[0], l[1] || ""); }); } catch (e) {}
 
 /* what the network is allowed to touch */
@@ -505,4 +506,5 @@ window.Engine = {
   setForeignSpeck: function(uri){ extraSpeck = uri; },
   icon: ICON.d
 };
+route(true);
 })();

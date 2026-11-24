@@ -250,3 +250,97 @@ img.bled{outline:2px solid var(--bleed-accent,#c33);outline-offset:-2px}
 /* the Invisible Hands mark (brand: linglab.org/invisiblehands/brand) */
 .net-chip.has-mark::before{display:none!important}.net-chip .ih-tag{width:15px;height:15px;margin:0 7px 0 -2px;vertical-align:-3px}
 .net-panel .ctl{display:inline-flex;align-items:center}.net-panel .ctl .ih-tag{margin-left:6px}
+
+/* ---------- oddities: glitches ---------- */
+.odd-layer{position:fixed;inset:0;pointer-events:none;z-index:9000;overflow:hidden}
+.odd-layer a{pointer-events:auto}
+.odd-say{position:fixed;left:50%;bottom:9vh;transform:translate(-50%,12px);max-width:min(680px,88vw);padding:14px 22px;background:#000;color:#EDE6D3;font-family:var(--mono);font-size:15px;letter-spacing:.02em;border-radius:4px;opacity:0;transition:opacity .4s,transform .4s;text-align:center}
+.odd-say.on{opacity:1;transform:translate(-50%,0)}
+body.odd-tear main{animation:odd-jit .09s steps(2) infinite;filter:drop-shadow(3px 0 0 rgba(255,0,60,.75)) drop-shadow(-3px 0 0 rgba(0,220,255,.75))}
+body.odd-tear .odd-layer{background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+@keyframes odd-jit{0%{transform:translate(0,0)}25%{transform:translate(-7px,2px) skewX(2deg)}50%{transform:translate(5px,-3px)}75%{transform:translate(-2px,4px) skewX(-3deg)}}
+.odd-bar{position:absolute;left:-10%;width:120%;background:#000;display:flex;align-items:center;overflow:hidden;font-family:var(--mono);font-size:11px;letter-spacing:.6em;color:var(--accent,#c33);white-space:nowrap}
+body.odd-mirror main,body.odd-mirror header.site,body.odd-mirror footer.site{transform:scaleX(-1);transition:transform .25s steps(3)}
+.odd-bug{position:absolute;left:0;top:0;background-size:contain;background-repeat:no-repeat;animation:odd-crawl linear forwards;opacity:0}
+@keyframes odd-crawl{0%{transform:translate(var(--x0),var(--y0)) rotate(0);opacity:1}50%{transform:translate(calc((var(--x0) + var(--x1))/2 + 3vw),calc((var(--y0) + var(--y1))/2 - 2vh)) rotate(200deg)}100%{transform:translate(var(--x1),var(--y1)) rotate(420deg);opacity:1}}
+.ph.odd-stare img{filter:grayscale(1) contrast(1.5) brightness(.8)!important;animation:odd-stare 5s ease-in-out}
+@keyframes odd-stare{0%{transform:scale(1)}100%{transform:scale(1.18)}}
+.ph.odd-stare figcaption{color:var(--voice,#E8B7A6);font-family:var(--mono)}
+body.odd-breathe main{animation:odd-breathe 3.6s ease-in-out 2;transform-origin:50% 40vh}
+@keyframes odd-breathe{0%,100%{transform:scale(1)}45%{transform:scale(1.045,1.03)}60%{transform:scale(1.05,1.035)}}
+.odd-dark{position:fixed;inset:0;background:#000;display:grid;place-items:center;opacity:1;transition:opacity .6s;pointer-events:auto}
+.odd-dark.off{opacity:0}
+.odd-dark div{max-width:min(620px,86vw);font-family:var(--mono);color:#E9E2CF;font-size:clamp(16px,2.2vw,22px);line-height:1.5}
+.odd-dark b{display:block;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--voice,#E8B7A6);margin-bottom:12px;font-weight:400}
+.odd-dark span::after{content:"▌";animation:odd-blink 1s steps(1) infinite}
+@keyframes odd-blink{50%{opacity:0}}
+.odd-red{background:#000;color:transparent;border-radius:1px;transition:color .5s,background .5s}
+.odd-red.peel{background:transparent;color:var(--accent,#c33);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em}
+.odd-stutter{pointer-events:none;filter:saturate(.6);overflow:hidden;box-sizing:border-box}
+.nav-links a.odd-menu{font-family:var(--mono);color:var(--voice,var(--accent))!important;letter-spacing:.02em}
+.odd-tail{position:fixed;left:0;top:0;background-size:contain;background-repeat:no-repeat}
+h1.odd-confess{color:var(--voice,var(--accent));font-family:var(--mono);letter-spacing:-.02em}
+.odd-rift{position:fixed;inset:0;opacity:0;transition:opacity 1.2s}
+.odd-rift.on{opacity:1}
+.odd-rift svg{position:absolute;inset:0;width:100%;height:100%}
+.odd-rift polyline{fill:none;stroke:#000;stroke-width:2.2;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 6px var(--accent,#c33));stroke-width:9px}
+.odd-rift a{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#000;color:#EDE6D3;font-family:var(--mono);font-size:14px;padding:14px 20px;border:1px solid var(--accent,#c33);text-decoration:none;animation:odd-blink 2.4s steps(1) infinite}
+
+/* ---------- oddities: doors ---------- */
+.odd-foot{margin-left:12px;opacity:.55}.odd-foot a{color:inherit}
+p.odd-door{margin-top:28px;font-size:13px;color:var(--muted)}
+.btn.odd-door{margin-left:10px}
+.exit.odd-door{border-style:dashed;opacity:.8}
+
+/* ---------- oddities: holes ---------- */
+#hole{min-height:70vh}
+.odd-crawl{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(240px,.8fr);gap:40px;align-items:start}
+@media (max-width:760px){.odd-crawl{grid-template-columns:1fr}}
+.odd-crawl-text p{font-size:18px;line-height:1.6;max-width:60ch}
+.odd-map{font-size:22px!important;line-height:1!important;letter-spacing:.2em;text-align:center}
+.odd-inv{list-style:none;padding:0;margin:8px 0 0;font-family:var(--mono);font-size:13px}.odd-inv li{padding:6px 0;border-bottom:1px solid var(--stroke)}
+.odd-crawl h4,.odd-profile h4{margin:22px 0 6px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:400;color:var(--muted)}
+.ph.odd-dim img{filter:grayscale(1) brightness(.6) contrast(1.4)!important}
+.odd-av{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;background:hsl(var(--h),18%,32%);color:#EEE;font-family:var(--mono);font-size:13px}
+.odd-profile{display:grid;grid-template-columns:120px 1fr;gap:32px;max-width:900px;margin:0 auto;padding:0 24px}
+.odd-profile .odd-av{width:120px;height:120px;font-size:40px}
+.odd-profile dl{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;margin:24px 0;font-size:14px}.odd-profile dt{color:var(--muted);font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.1em}
+.odd-reports{padding-left:18px;font-size:14px}
+@media (max-width:640px){.odd-profile{grid-template-columns:1fr}}
+.odd-staff{width:100%;border-collapse:collapse;font-size:14px}.odd-staff th{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:8px}.odd-staff td{padding:8px;border-top:1px solid var(--stroke);vertical-align:middle}
+.odd-pager{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.odd-terms p{margin:0 0 .9em;line-height:1.45;max-width:72ch}.odd-terms sup a{color:var(--accent);text-decoration:none;padding:0 2px}
+.odd-end{min-height:80vh;display:grid;place-content:center;text-align:center;gap:16px}.odd-end h1{font-size:clamp(80px,20vw,260px);letter-spacing:-.06em}
+.odd-era-nav{display:flex;justify-content:space-between;font-family:var(--mono);font-size:13px;margin:20px 0}
+.era{margin:0 auto;max-width:900px}
+.era-2011{background:linear-gradient(#f7f9fb,#e4ebf1);color:#333;font-family:"Lucida Grande",Helvetica,Arial,sans-serif;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.25);overflow:hidden}
+.era-2011 header{display:flex;align-items:center;gap:10px;padding:14px 20px;background:linear-gradient(#5d8fc9,#3a6aa5);color:#fff;text-shadow:0 -1px 0 rgba(0,0,0,.3)}.era-2011 header b{font-size:22px}.era-2011 nav{margin-left:auto;display:flex;gap:14px}.era-2011 nav a{color:#fff;font-size:13px}
+.era-2011 .beta{background:#ff6a00;font-size:10px;padding:2px 6px;border-radius:3px;text-transform:uppercase}
+.era-2011 .hero2011{padding:40px 30px;text-align:center}.era-2011 h1{font-family:inherit;font-size:34px;color:#234;letter-spacing:-.01em;text-shadow:0 1px 0 #fff}
+.era-2011 .glossy{display:inline-block;margin-top:18px;padding:12px 26px;border-radius:20px;background:linear-gradient(#9fd36a,#5ea42b);color:#fff;font-weight:bold;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 2px 4px rgba(0,0,0,.25)}
+.era-2011 .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:0 30px 20px}.era-2011 h3{font-family:inherit;font-size:16px;color:#3a6aa5}.era-2011 p{font-size:13px}.era-2011 .small{text-align:center;font-size:11px;color:#777;padding:10px}
+.era-1999{background-color:#000080;background-image:var(--tile);background-size:40px 40px;color:#ff0;font-family:"Comic Sans MS","Comic Neue",cursive;padding:10px}
+.era-1999 table{width:100%;background:rgba(0,0,40,.85)}.era-1999 td{vertical-align:top;padding:12px}.era-1999 .side{width:150px;background:#c0c0c0;color:#000;font-family:"Times New Roman",serif;font-weight:bold}.era-1999 a{color:#0ff}.era-1999 .side a{color:#00e}
+.era-1999 h1{font-family:"Times New Roman",serif;color:#f0f;font-size:34px;text-align:center;text-shadow:2px 2px #0f0}
+.era-1999 .blink{animation:odd-blink 1s steps(1) infinite;color:#f00;font-weight:bold;text-align:center}
+.era-1999 .marq{overflow:hidden;white-space:nowrap;border:2px inset #c0c0c0;background:#000;color:#0f0;padding:4px 0}.era-1999 .marq span{display:inline-block;padding-left:100%;animation:odd-marq 18s linear infinite}
+@keyframes odd-marq{to{transform:translateX(-100%)}}
+.era-1999 .uc{text-align:center;background:repeating-linear-gradient(45deg,#ff0 0 12px,#000 12px 24px);color:#f00;font-weight:bold;padding:6px;text-shadow:1px 1px #000}
+.era-1999 .ctr{font-family:"Courier New",monospace;background:#000;color:#f00;padding:2px 6px;border:2px inset #888}
+.era-1999 .gb{border-bottom:1px dashed #ff0;padding:4px 0;font-size:14px}.era-1999 .small{font-size:11px;color:#ccc}
+.era-1987{background:#001400;color:#33ff66;font-family:"VT323","Courier New",monospace;padding:24px;border-radius:14px;box-shadow:inset 0 0 60px rgba(0,255,80,.15),0 0 0 10px #222;text-shadow:0 0 4px #33ff66}
+.era-1987 pre{margin:0;font-family:inherit;font-size:16px;white-space:pre-wrap}.era-1987 .menu a{color:#33ff66;margin-right:14px;font-family:inherit}.era-1987 .cursor{animation:odd-blink 1s steps(1) infinite}
+.era-1952{background:#f4efe1;color:#222;font-family:"Courier Prime","Courier New",monospace;padding:48px 56px;box-shadow:0 6px 30px rgba(0,0,0,.4);transform:rotate(-.6deg);max-width:700px;position:relative}
+.era-1952 .memo-h{font-weight:bold;letter-spacing:.3em;text-align:center}.era-1952 p{font-size:15px;line-height:1.6}.era-1952 s{color:#666}
+.era-1952 .stamp{position:absolute;right:40px;top:120px;transform:rotate(-14deg);border:3px solid #b22;color:#b22;padding:4px 12px;font-weight:bold;letter-spacing:.2em;opacity:.75}
+.era-1952 .sig,.era-1897 .sig{font-family:"Homemade Apple","Brush Script MT",cursive;font-size:24px;margin-top:30px}
+.era-1897{background:#e8dcc0;color:#3b2a14;font-family:"IM Fell English","Georgia",serif;padding:40px 50px;background-image:repeating-linear-gradient(#e8dcc0 0 31px,#b9a882 31px 32px);box-shadow:0 6px 30px rgba(0,0,0,.5)}
+.era-1897 .ledger-h{font-variant:small-caps;font-size:22px;text-align:center;border-bottom:2px double #3b2a14}.era-1897 p{font-style:italic;font-size:17px;margin:0;line-height:32px;display:flex;gap:12px}.era-1897 .d{width:70px;flex:none}.era-1897 .amt{margin-left:auto;flex:none}
+.era-before{min-height:70vh;background:#000;display:grid;place-content:center;justify-items:center;gap:20px;color:#333;font-family:var(--mono);letter-spacing:.6em;text-transform:uppercase}
+.odd-big-mark{display:block;width:min(40vw,300px);height:min(40vw,300px);background-size:contain;background-repeat:no-repeat;animation:odd-breathe 6s ease-in-out infinite}
+.odd-404{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 auto;max-width:1200px;padding:12px 24px;background:#000;color:#EDE6D3;font-size:12px}.odd-404 a{color:inherit;margin-left:14px}
+.odd-rot-copy{transform-origin:50% 0}
+.odd-rot-copy.dark{filter:invert(1) hue-rotate(180deg) contrast(1.2)}
+.odd-floor-end{display:flex;flex-wrap:wrap;gap:6px;padding:30px 24px;font-family:var(--mono);font-size:12px;color:var(--muted);min-height:70vh;align-content:flex-start}.odd-floor-end i{display:inline-block;width:18px;height:18px;background-size:contain}
+@media (prefers-reduced-motion:reduce){body.odd-tear main{animation:none}.odd-big-mark,.era-1999 .marq span,.era-1999 .blink,.odd-rift a{animation:none}}
+html.odd-clip,html.odd-clip body{overflow-x:clip}

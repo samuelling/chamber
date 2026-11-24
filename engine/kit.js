@@ -172,7 +172,7 @@ window.Kit = { img: img, build: function(P){
     fine: P.fine || ["© 2026 " + P.name], pages: pages, posts: posts, postsDone: P.postsDone || "That’s every post.", lastPostExit: P.lastPostExit || P.up,
     anchors: P.anchors || {}, rooms: rooms, roomOrder: S.roomOrder, exits: P.exits, special: P.special, up: P.up, levelWord: P.levelWord || "Level",
     word: P.word, hiddenWord: P.hiddenWord || "help", field: P.field,
-    motif: { polys: function(n, r, w){ var shape = M.alt && n > 1 && n % M.alt[1] === 0 ? M.alt[0] : M.shape; return Motifs.polys(shape, n, r, w); }, inside: Motifs.inside(M.inside), ink: M.ink, gapMode: M.gapMode,
+    motif: { shape: M.shape, polys: function(n, r, w){ var shape = M.alt && n > 1 && n % M.alt[1] === 0 ? M.alt[0] : M.shape; return Motifs.polys(shape, n, r, w); }, inside: Motifs.inside(M.inside), ink: M.ink, gapMode: M.gapMode,
       trayKind: { grid: 0, brick: 1, radial: 2, spiral: 3, wave: 4, checker: 5, scatter: 6 }[M.tray || "grid"], trayStep: M.step || 0.2, trayGap: hex(M.gap), palette: [hex(M.gap)].concat(M.palette.map(hex)) },
     dive: { view: P.dive.view || "dive", top: P.dive.top, unit: P.dive.unit, chant: P.dive.chant, say: P.dive.say, voice: P.dive.voice, still: P.dive.still || "Still here." },
     counter: P.counter, cookie: P.cookie, chat: P.chat, forms: forms,

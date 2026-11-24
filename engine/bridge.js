@@ -45,13 +45,14 @@ function sourceSlug(v){
 }
 
 /* ---------- the controls ---------- */
-var P = { source: 0, bleed: 0, motif: 0, rot: 0, palette: 0, depth: 0, pulse: 0, visitor: 0 };
+var P = { source: 0, bleed: 0, motif: 0, rot: 0, palette: 0, depth: 0, pulse: 0, visitor: 0, weird: 0, glitch: 0 };
 var lastRemote = 0;   /* when a person last moved something; the local LFO yields to them */
 function setP(id, v, remote){
   if (!(id in P) || !allow) return;
   var old = P[id]; P[id] = clamp(v);
   if (remote) lastRemote = Date.now();
   if (id === "pulse" && P.pulse > 0.5 && old <= 0.5) pulse();
+  if (id === "glitch" && P.glitch > 0.5 && old <= 0.5 && window.Oddities) Oddities.glitch();
   refresh();
 }
 
@@ -195,9 +196,9 @@ setInterval(function(){
 var hands = null;
 var tagOf = {}, chipMark = null;
 if (window.InvisibleHands){
-  var LABEL = { source: "Source site (which member bleeds in)", bleed: "Bleed (how much leaks in)", motif: "Motif swap", rot: "Rot (words turn)", palette: "Palette shift", depth: "Depth (force the dark)", pulse: "Pulse (flash, trigger)", visitor: "Visitor (whispers, toggle)" };
+  var LABEL = { source: "Source site (which member bleeds in)", bleed: "Bleed (how much leaks in)", motif: "Motif swap", rot: "Rot (words turn)", palette: "Palette shift", depth: "Depth (force the dark)", pulse: "Pulse (flash, trigger)", visitor: "Visitor (whispers, toggle)", weird: "Weird (how often it goes wrong)", glitch: "Glitch (one episode, trigger)" };
   var params = Object.keys(P).map(function(k){
-    return { id: k, label: LABEL[k] || k, kind: k === "pulse" ? "trig" : k === "visitor" ? "toggle" : "cont", get: function(){ return P[k]; }, set: function(v){ setP(k, v, true); } };
+    return { id: k, label: LABEL[k] || k, kind: k === "pulse" || k === "glitch" ? "trig" : k === "visitor" ? "toggle" : "cont", get: function(){ return P[k]; }, set: function(v){ setP(k, v, true); } };
   });
   hands = window.InvisibleHands.create({
     app: "chamber-" + ME, name: S.name, params: params,
@@ -232,10 +233,10 @@ function drawPanel(force){
   chip.appendChild(document.createTextNode(!allow ? "Network off" : linked ? "Linked · " + hands.room : local ? "Network · " + Object.keys(tabs).length + " nearby" : "Network"));
   if (!panel.classList.contains("on") && force !== true) return;
   var src = sourceSlug(P.source), e = src && entry(src);
-  var NAME = { source: "Source", bleed: "Bleed", rot: "Rot", motif: "Motif", palette: "Palette", depth: "Depth", pulse: "Pulse", visitor: "Visitor" };
-  var bars = ["source", "bleed", "rot", "motif", "palette", "depth", "pulse", "visitor"].map(function(k){
+  var NAME = { source: "Source", bleed: "Bleed", rot: "Rot", motif: "Motif", palette: "Palette", depth: "Depth", pulse: "Pulse", visitor: "Visitor", weird: "Weird", glitch: "Glitch" };
+  var bars = ["source", "bleed", "rot", "motif", "palette", "depth", "pulse", "visitor", "weird", "glitch"].map(function(k){
     var val = k === "source" ? "<span class='mono'>" + (e ? esc(e.name) : "—") + "</span>"
-      : k === "pulse" || k === "visitor" ? "<span class='mono'>" + (P[k] > 0.5 ? "on" : "off") + "</span>"
+      : k === "pulse" || k === "visitor" || k === "glitch" ? "<span class='mono'>" + (P[k] > 0.5 ? "on" : "off") + "</span>"
       : "<span class='bar'><i style='width:" + Math.round(P[k] * 100) + "%'></i></span>";
     return "<div class='row'><span class='ctl' data-k='" + k + "'>" + NAME[k] + "</span>" + val + "</div>"; }).join("");
   panel.innerHTML = "<h4>The Chamber network</h4>" +

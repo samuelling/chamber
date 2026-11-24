@@ -19,15 +19,26 @@ MouthBreeder (Corpora Meridian, No. 01) lives in its own repo and joins the netw
 
 A member is a folder with three files:
 
-- `index.html`: the site's own tokens and a few styles, then `site.js`, `../engine/engine.js`, `../engine/invisible-hands.js` and `../engine/bridge.js`.
+- `index.html`: the site's own tokens and a few styles, then `site.js`, `../engine/oddities.js`, `../engine/engine.js`, `../engine/invisible-hands.js` and `../engine/bridge.js`.
 - `site.js`: `window.SITE`, which holds everything else: pages, posts, rooms, the motif (`motif.polys(n, rng, weirdness)` returns polygons for level `n` of the dive), the trapped character, chat, cookie banner and forms.
 - `atoms.json`: what siblings may borrow. Generate it with `node tools/atoms.mjs <folder>`.
 
 Then mark it `"live": true` in `directory.json`.
 
+## When it goes wrong
+
+`engine/oddities.js` makes every member go wrong in its own voice, built only from its own material: its word, its hidden word, its trapped character's lines, its rooms, counter and photographs. Deeper pages go wrong more often.
+
+- **Glitches** (a few seconds, then the page puts itself back): possess, tear, mirror, melt, swarm, stare, breathe, dark, redact, stutter, count, menu, trail, confess.
+- **Episodes**: three to five glitches in a row, then the page splits and a link through the split leads into a rabbit hole.
+- **Rabbit holes** (`#hole-…`): `corridor` (a crawl through the basement levels, with a map that is a little wrong and things to carry), `staff` (a directory, page n of ∞, whose chain of command reaches the trapped character, who reports to you), `terms` (supplementary terms; every footnote is smaller, down to schedule X), `archive` (the site in 2011, 1999, 1987, 1952, 1897 and before), `basement` (the homepage again, one floor lower and worse each time).
+- **Doors**: footer fine print (staff login, site history), the legal page, the 404 page, and now and then a room's exits.
+
+Try one by hand: `?odd=tear` (any glitch name), `?odd=episode`, `?odd=rift`, or `#hole-corridor-1-1`.
+
 ## The network
 
-Only numbers from 0 to 1 travel. Each member exposes `source`, `bleed`, `motif`, `rot`, `palette`, `depth`, `pulse` and `visitor`, and reports `depth`, `dwell`, `dive`, `flinch` and `count`. The numbers pick which sibling's `atoms.json` to borrow from and how much of the page to hand over.
+Only numbers from 0 to 1 travel. Each member exposes `source`, `bleed`, `motif`, `rot`, `palette`, `depth`, `pulse`, `visitor`, `weird` and `glitch`, and reports `depth`, `dwell`, `dive`, `flinch` and `count`. The numbers pick which sibling's `atoms.json` to borrow from and how much of the page to hand over.
 
 - **Alone:** members open in tabs of the same browser find each other over a BroadcastChannel and drive each other with slow LFOs.
 - **The console:** the front door's patch bay sends to any member open in the same browser, with its own LFO.
@@ -72,6 +83,8 @@ Every member site, the front door and MouthBreeder speak Invisible Hands protoco
 | `depth` | cont | Forces the page toward its dark levels (0 = surface, 1 = deepest) |
 | `pulse` | trig | Each rising edge flashes a source photograph and line across the page for a split second |
 | `visitor` | toggle | The source's trapped character starts whispering lines into the page |
+| `weird` | cont | How often the page goes wrong on its own: 0 leaves it to depth and chance, 1 means a glitch on most pages and frequent episodes |
+| `glitch` | trig | Each rising edge fires one glitch now, cutting off any glitch already running |
 
 Outputs, published as `state`: `depth` (how deep the reader is), `dwell` (time on the page, 2 min = 1), `dive` (scroll speed in the dive), `flinch` (scrolling back up in a hurry), `count` (the live counter).
 
